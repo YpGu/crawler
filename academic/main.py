@@ -13,7 +13,6 @@ from Log import *
 import sys
 
 source_page = 'http://www.kdd.org/kdd2017/accepted-papers'
-recipient = 'gyp7364@gmail.com'
 max_count = 50
 
 
@@ -25,7 +24,7 @@ class Entity:
 
 
 # send email
-def push(all_papers, recipient):
+def push(all_papers, recipient = None):
     if len(all_papers) == 0:
         print 'No events available, try again tomorrow!'
 
@@ -39,7 +38,10 @@ def push(all_papers, recipient):
     sys.path.append('../../mail/')
     from sendmail import send_mail 
     today = datetime.now().strftime("%m/%d/%Y")
-    send_mail('Daily Paper Summary: {}'.format(today), c, recipient)
+    if recipient is None:
+        send_mail('Daily Paper Summary: {}'.format(today), c)
+    else:
+        send_mail('Daily Paper Summary: {}'.format(today), c, recipient)
     print 'Email sent!'
 
 
@@ -47,7 +49,7 @@ def main():
     all_papers = []; count = 0
     while True:
         if count >= max_count:
-            push(all_papers, recipient)
+            push(all_papers)
             return
 
         try:
@@ -87,7 +89,7 @@ def main():
                     count += 1
 
                 if count >= max_count: 
-                    push(all_papers, recipient)
+                    push(all_papers)
                     return
 
         break
